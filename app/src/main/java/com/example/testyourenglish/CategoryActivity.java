@@ -1,8 +1,10 @@
 package com.example.testyourenglish;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.GridView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -39,5 +41,16 @@ public class CategoryActivity extends AppCompatActivity {
 
 
 
+    }
+    //backbutton
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        if(item.getItemId() == android.R.id.home){
+
+            CategoryActivity.this.finish();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.testyourenglish;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +45,19 @@ public class CatgridAdapter extends BaseAdapter {
        else{
            view = convertView;
        }
+       //setam onclicklistener la view
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(parent.getContext(),SetsActivity.class);
+                intent.putExtra("CATEGORY", catList.get(position));
+                parent.getContext().startActivity(intent); //incepe activitatea de sets
+            }
+        });
+
+
+
         ((TextView) view.findViewById(R.id.catName)).setText(catList.get(position));
 
         Random rnd = new Random();
