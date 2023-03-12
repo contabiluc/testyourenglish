@@ -52,6 +52,7 @@ public class CatgridAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Intent intent = new Intent(parent.getContext(),SetsActivity.class);
                 intent.putExtra("CATEGORY", catList.get(position));
+                intent.putExtra("CATEGORY_ID",position + 1);
                 parent.getContext().startActivity(intent); //incepe activitatea de sets
             }
         });

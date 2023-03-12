@@ -1,5 +1,7 @@
 package com.example.testyourenglish;
 
+import static com.example.testyourenglish.SpalshActivity.catList;
+
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.GridView;
@@ -27,15 +29,9 @@ public class CategoryActivity extends AppCompatActivity {
 
         catGrid = findViewById(R.id.catGridView);
 
-        List<String> catList = new ArrayList<>();
-        catList.add("Cat 1");
-        catList.add("Cat 2");
-        catList.add("Cat 3");
-        catList.add("Cat 4");
-        catList.add("Cat 5");
-        catList.add("Cat 6");
 
-        CatgridAdapter adapter = new CatgridAdapter(catList);
+
+        CatgridAdapter adapter = new CatgridAdapter(catList); //acum e catList de la Spalsh Activity
         catGrid.setAdapter(adapter);
 
 

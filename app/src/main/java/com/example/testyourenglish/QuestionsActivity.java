@@ -1,5 +1,8 @@
 package com.example.testyourenglish;
 
+import static com.example.testyourenglish.SetsActivity.category_id;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.Animator;
@@ -13,6 +16,14 @@ import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +36,8 @@ public class QuestionsActivity extends AppCompatActivity implements View.OnClick
     private int quesNum;
     private CountDownTimer countDown;
     private int score;
-
+    private FirebaseFirestore firestore;
+    private int setNo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +57,9 @@ public class QuestionsActivity extends AppCompatActivity implements View.OnClick
         option3.setOnClickListener(this);
         option4.setOnClickListener(this);
 
+        setNo = getIntent().getIntExtra("SETNO", 1);
+        firestore = FirebaseFirestore.getInstance();
+
         getQestyionsList(); //cream metoda pt intrebari
         score = 0;
     }
@@ -52,13 +67,41 @@ public class QuestionsActivity extends AppCompatActivity implements View.OnClick
         {
             questionList = new ArrayList<>();
 
-            questionList.add(new QuestionC("Question 1", "A","B","C","D",2));
+
+            firestore.collection("TestyourEnglish").document("CAT" + String.valueOf(category_id))
+                    .collection("SET" + String.valueOf(setNo))
+                            .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                QuerySnapshot questions = task.getResult();
+
+                                for(QueryDocumentSnapshot doc : questions)
+                                {
+                                    questionList.add(new QuestionC(doc.getString("QUESTION"),
+                                            doc.getString("A"),
+                                            doc.getString("B"),
+                                            doc.getString("C"),
+                                            doc.getString("D"),
+                                            Integer.valueOf(doc.getString("ANSWER"))
+
+                                            ));
+                                }
+
+                                setQuestions();
+
+                            } else {
+                                Toast.makeText(QuestionsActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+            /* questionList.add(new QuestionC("Question 1", "A","B","C","D",2));
             questionList.add(new QuestionC("Question 2", "B","A","D","C",2));
             questionList.add(new QuestionC("Question 3", "D","C","B","A",2));
             questionList.add(new QuestionC("Question 4", "A","C","D","B",2));
-            questionList.add(new QuestionC("Question 5", "D","B","C","A",2));
+            questionList.add(new QuestionC("Question 5", "D","B","C","A",2));*/
 
-            setQuestions();
+
         }
 
         private void setQuestions() //cream o functie pt intrebari
